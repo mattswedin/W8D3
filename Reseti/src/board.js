@@ -9,7 +9,20 @@ if (typeof window === 'undefined'){
  * and two white pieces at [3, 3] and [4, 4]
  */
 function _makeGrid () {
+
+  const grid = new Array(8);
+  for (let i = 0; i < 8; i++) {
+    grid[i] = new Array(8)
 }
+
+grid[3][4] = new Piece('black')
+grid[4][3] = new Piece('black')
+grid[3][3] = new Piece('white')
+grid[4][4] = new Piece('white')
+
+return grid
+}
+
 
 /**
  * Constructs a Board with a starting grid set up.
@@ -28,6 +41,21 @@ Board.DIRS = [
  * Checks if a given position is on the Board.
  */
 Board.prototype.isValidPos = function (pos) {
+  let x = pos[0];
+  let y = pos[1];
+
+  if ( y < 0 || x < 0 ) {
+    return false
+  };
+
+  if ( y > 7 || x > 7 ) {
+    return false
+  };
+
+  return true
+
+  
+
 };
 
 /**
@@ -35,6 +63,19 @@ Board.prototype.isValidPos = function (pos) {
  * throwing an Error if the position is invalid.
  */
 Board.prototype.getPiece = function (pos) {
+
+  
+
+  if (this.isValidPos(pos)) {
+
+    let x = pos[0];
+    let y = pos[1];
+
+    return this.grid[x][y]
+
+  } else { throw new Error('Not valid pos!') }
+
+  
 };
 
 /**
@@ -42,12 +83,35 @@ Board.prototype.getPiece = function (pos) {
  * matches a given color.
  */
 Board.prototype.isMine = function (pos, color) {
+
+  let x = pos[0];
+  let y = pos[1];
+
+  let piece = this.grid[x][y];
+
+  // debugger
+  if (!piece || piece.color != color) {
+    return false;
+  }
+   return true;
+  
+//  else if (typeof piece === undefined)
+
 };
 
 /**
  * Checks if a given position has a piece on it.
  */
 Board.prototype.isOccupied = function (pos) {
+
+  let x = pos[0];
+  let y = pos[1];
+
+  if (this.grid[x][y]) {
+    return true
+  } else {return false}
+
+
 };
 
 /**
@@ -64,6 +128,37 @@ Board.prototype.isOccupied = function (pos) {
  * Returns empty array if no pieces of the opposite color are found.
  */
 Board.prototype._positionsToFlip = function(pos, color, dir, piecesToFlip){
+  
+
+  if (!this.isValidPos(pos)) {
+    return [];
+  };
+
+    let newPos = pos + dir
+    
+    let x = newPos[0];
+    let y = newPos[2];
+
+    let longPos = []
+  
+    if (this.grid[x][y] && this.grid[x][y].color === this.color.flip) {
+      
+    do { 
+      longPos.push([x,y]);
+      newPos = newPos + dir;
+
+      if (this.grid[x][y].color === color) {
+        break;
+      }
+
+     } while (this.grid[x][y].color === this.color.flip);
+
+    return longPos;
+
+    } else { return []}
+
+
+
 };
 
 /**
